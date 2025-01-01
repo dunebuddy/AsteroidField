@@ -1,0 +1,292 @@
+[gd_scene load_steps=8 format=3 uid="uid://do2up0lwetyw3"]
+
+[ext_resource type="Script" path="res://scenes/space/space.gd" id="1_0e7qy"]
+[ext_resource type="Theme" uid="uid://djai5dh4kwmyv" path="res://assets/main_theme.tres" id="2_jkbi2"]
+
+[sub_resource type="Environment" id="Environment_16imj"]
+background_mode = 1
+glow_enabled = true
+glow_levels/2 = 16.0
+glow_normalized = true
+glow_strength = 1.13
+glow_mix = 0.053
+glow_bloom = 0.28
+glow_blend_mode = 4
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0711
+
+[sub_resource type="Animation" id="Animation_h6wyy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1152, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_gi7k2"]
+resource_name = "slide_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1152, 0), Vector2(700, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_yca37"]
+resource_name = "slide_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(700, 0), Vector2(1152, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ymab7"]
+_data = {
+"RESET": SubResource("Animation_h6wyy"),
+"slide_in": SubResource("Animation_gi7k2"),
+"slide_out": SubResource("Animation_yca37")
+}
+
+[node name="Space" type="Node3D"]
+script = ExtResource("1_0e7qy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_16imj")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.91618)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="FPSLabel" type="Label" parent="UI"]
+visible = false
+offset_left = 3.0
+offset_right = 35.0
+offset_bottom = 14.0
+theme_override_colors/font_color = Color(0.310617, 0.310617, 0.310617, 1)
+theme_override_font_sizes/font_size = 10
+text = "30 FPS"
+
+[node name="Menu" type="PanelContainer" parent="UI"]
+clip_contents = true
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 450.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("2_jkbi2")
+
+[node name="MenuAnimator" type="AnimationPlayer" parent="UI/Menu"]
+libraries = {
+"": SubResource("AnimationLibrary_ymab7")
+}
+
+[node name="MenuMargin" type="MarginContainer" parent="UI/Menu"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MenuVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Header" type="Label" parent="UI/Menu/MenuMargin/MenuVBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Opções"
+horizontal_alignment = 1
+
+[node name="ShowFPS" type="CheckButton" parent="UI/Menu/MenuMargin/MenuVBox"]
+layout_mode = 2
+focus_mode = 0
+text = "Show FPS"
+
+[node name="HSeparator" type="HSeparator" parent="UI/Menu/MenuMargin/MenuVBox"]
+layout_mode = 2
+
+[node name="OptionsVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox"]
+layout_mode = 2
+
+[node name="SpeedPanel" type="PanelContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox"]
+layout_mode = 2
+
+[node name="SpeedMargin" type="MarginContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel"]
+layout_mode = 2
+
+[node name="SpeedVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin"]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox"]
+layout_mode = 2
+text = "Velocidade
+"
+horizontal_alignment = 1
+
+[node name="SpeedHBox" type="HBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SpeedMinVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMinVBox"]
+layout_mode = 2
+text = "Mínimo"
+horizontal_alignment = 1
+
+[node name="SpeedMinHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMinVBox"]
+layout_mode = 2
+min_value = 5.0
+max_value = 150.0
+value = 10.0
+
+[node name="SpeedMaxVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMaxVBox"]
+layout_mode = 2
+text = "Máximo"
+horizontal_alignment = 1
+
+[node name="SpeedMaxHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMaxVBox"]
+layout_mode = 2
+min_value = 5.0
+max_value = 150.0
+value = 60.0
+
+[node name="ScalePanel" type="PanelContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox"]
+layout_mode = 2
+
+[node name="ScaleMargin" type="MarginContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel"]
+layout_mode = 2
+
+[node name="ScaleVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin"]
+layout_mode = 2
+
+[node name="ScaleLabel" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox"]
+layout_mode = 2
+text = "Scale"
+horizontal_alignment = 1
+
+[node name="ScaleHBox" type="HBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ScaleMinVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMinVBox"]
+layout_mode = 2
+text = "Mínimo"
+horizontal_alignment = 1
+
+[node name="ScaleMinHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMinVBox"]
+layout_mode = 2
+min_value = 0.02
+max_value = 0.5
+step = 0.01
+value = 0.05
+
+[node name="ScaleMaxVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMaxVBox"]
+layout_mode = 2
+text = "Máximo"
+horizontal_alignment = 1
+
+[node name="ScaleMaxHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMaxVBox"]
+layout_mode = 2
+min_value = 0.02
+max_value = 0.75
+step = 0.01
+value = 0.15
+
+[node name="ZScalePanel" type="PanelContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox"]
+layout_mode = 2
+
+[node name="ZScaleMargin" type="MarginContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel"]
+layout_mode = 2
+
+[node name="ZScaleVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin"]
+layout_mode = 2
+
+[node name="ZScaleLabel" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox"]
+layout_mode = 2
+text = "Z Scale"
+horizontal_alignment = 1
+
+[node name="ZScaleHBox" type="HBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ZScaleMinVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMinVBox"]
+layout_mode = 2
+text = "Mínimo"
+horizontal_alignment = 1
+
+[node name="ZScaleMinHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMinVBox"]
+layout_mode = 2
+min_value = 0.02
+max_value = 2.0
+step = 0.01
+value = 0.05
+
+[node name="ZScaleMaxVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMaxVBox"]
+layout_mode = 2
+text = "Máximo"
+horizontal_alignment = 1
+
+[node name="ZScaleMaxHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMaxVBox"]
+layout_mode = 2
+min_value = 0.02
+max_value = 5.0
+step = 0.01
+value = 0.75
+
+[connection signal="toggled" from="UI/Menu/MenuMargin/MenuVBox/ShowFPS" to="." method="_on_show_fps_button_toggled"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMinVBox/SpeedMinHSlider" to="." method="_on_min_speed_slider_value_changed"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMaxVBox/SpeedMaxHSlider" to="." method="_on_max_speed_slider_value_changed"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMinVBox/ScaleMinHSlider" to="." method="_on_min_scale_slider_value_changed"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMaxVBox/ScaleMaxHSlider" to="." method="_on_max_scale_slider_value_changed"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMinVBox/ZScaleMinHSlider" to="." method="_on_min_z_scale_slider_value_changed"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ZScalePanel/ZScaleMargin/ZScaleVBox/ZScaleHBox/ZScaleMaxVBox/ZScaleMaxHSlider" to="." method="_on_max_z_scale_slider_value_changed"]

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://q1blyextljqi"]
+
+[ext_resource type="Script" path="res://scenes/drop/drop.gd" id="1_dq18p"]
+
+[node name="Drop" type="MeshInstance3D"]
+script = ExtResource("1_dq18p")
