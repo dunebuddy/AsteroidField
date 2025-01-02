@@ -10,30 +10,26 @@ var drop_scene = preload("res://scenes/drop/drop.tscn")
 @onready var menu: PanelContainer = $UI/Menu
 @onready var menu_animator: AnimationPlayer = $UI/Menu/MenuAnimator
 
-@onready var frustum_planes: Array[Plane] = $Camera3D.get_frustum()
-
 var is_menu_visible = false
 
 var speed_min = 10
 var speed_max = 60
 var scale_min = 0.05
 var scale_max = 0.15
-var z_scale_min = 0.05
+var z_scale_min = 0.5
 var z_scale_max = 0.75
 
 var ship_speed_max = 400
 var ship_speed = 0
-var acceleration = Vector3(0, 0, 0)
-var drops = []
+var drops: Array[Drop] = []
 
-func reseed_drop(drop):
+func reseed_drop(drop: Drop):
 	var scale_xy = randf_range(scale_min, scale_max)
 	var scale_z = randf_range(z_scale_min, z_scale_max)
 	
 	drop.transform.origin = Vector3(randf_range(-200, 200), randf_range(-100, 100), randf_range(-200, -90))
 	drop.set_drop_scale(Vector3(scale_xy, scale_xy, scale_z))
-	drop.set_drop_speed(randf_range(scale_min, speed_max))
-	drop.validate()
+	drop.speed = randf_range(scale_min, speed_max)
 
 
 func toggle_menu():
@@ -53,9 +49,8 @@ func _ready():
 	for i in range(4000):
 		var drop: Drop = drop_scene.instantiate()
 		
-		drop.frustum = frustum_planes
-		drop.connect("reseed", _on_drop_reseed)
-		drop.invalidate()
+		#drop.frustum = frustum_planes
+		reseed_drop(drop)
 
 		drops.append(drop)
 		add_child(drop)
@@ -73,9 +68,15 @@ func _process(delta):
 	var acceleration = acceleration_value - drag_value
 	ship_speed = clamp(ship_speed + acceleration, 0, ship_speed_max)
 	
-	#print_debug("acceleration_value=", acceleration_value)
-	#print_debug("drag_value=", drag_value)
-	_emit_acceleration_change()
+	for drop: Drop in drops:
+		if drop.transform.origin.z > 0:
+			reseed_drop(drop)
+		else:
+			drop.transform.origin.z += (drop.speed + ship_speed) * delta
+			
+			if ship_speed > 0.1:
+				drop.scale.z = drop.original_scale.z + ship_speed * 0.03
+				drop.material.set_shader_parameter("emission_intensity", clamp(ship_speed + drop.speed, 0, 160))
 
 
 func _input(event):
