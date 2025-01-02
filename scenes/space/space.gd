@@ -9,7 +9,7 @@ var drop_scene = preload("res://scenes/drop/drop.tscn")
 @onready var fps_label: Label = $UI/FPSLabel
 @onready var menu: PanelContainer = $UI/Menu
 @onready var menu_animator: AnimationPlayer = $UI/Menu/MenuAnimator
-
+@onready var asteroids_label: Label = $UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox/AsteroidsLabel
 var is_menu_visible = false
 
 var speed_min = 10
@@ -21,15 +21,20 @@ var z_scale_max = 0.75
 
 var ship_speed_max = 400
 var ship_speed = 0
+var drops_count = 4000
 var drops: Array[Drop] = []
 
 func reseed_drop(drop: Drop):
-	var scale_xy = randf_range(scale_min, scale_max)
-	var scale_z = randf_range(z_scale_min, z_scale_max)
-	
-	drop.transform.origin = Vector3(randf_range(-200, 200), randf_range(-100, 100), randf_range(-200, -90))
-	drop.set_drop_scale(Vector3(scale_xy, scale_xy, scale_z))
-	drop.speed = randf_range(scale_min, speed_max)
+	if drops.size() <= drops_count:
+		var scale_xy = randf_range(scale_min, scale_max)
+		var scale_z = randf_range(z_scale_min, z_scale_max)
+		
+		drop.transform.origin = Vector3(randf_range(-200, 200), randf_range(-100, 100), randf_range(-200, -90))
+		drop.set_drop_scale(Vector3(scale_xy, scale_xy, scale_z))
+		drop.speed = randf_range(scale_min, speed_max)
+	else:
+		drops.erase(drop)
+		drop.queue_free()
 
 
 func toggle_menu():
@@ -46,17 +51,26 @@ func toggle_menu():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	for i in range(4000):
-		var drop: Drop = drop_scene.instantiate()
-		
-		#drop.frustum = frustum_planes
-		reseed_drop(drop)
+	for i in range(drops_count):
+		_add_drop()
 
-		drops.append(drop)
-		add_child(drop)
+
+func _add_drop():
+	var drop: Drop = drop_scene.instantiate()
+	
+	#drop.frustum = frustum_planes
+	reseed_drop(drop)
+
+	drops.append(drop)
+	add_child(drop)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if drops.size() < drops_count:
+		for i in range(drops_count - drops.size()):
+			_add_drop()
+	
 	fps_label.text = "%d FPS" % Engine.get_frames_per_second()
 	
 	var acceleration_value = 0
@@ -68,6 +82,9 @@ func _process(delta):
 	var acceleration = acceleration_value - drag_value
 	ship_speed = clamp(ship_speed + acceleration, 0, ship_speed_max)
 	
+	_update_drops(delta)
+
+func _update_drops(delta):
 	for drop: Drop in drops:
 		if drop.transform.origin.z > 0:
 			reseed_drop(drop)
@@ -133,3 +150,9 @@ func _on_min_speed_slider_value_changed(value):
 
 func _on_max_speed_slider_value_changed(value):
 	speed_max = value
+
+
+func _on_asteroids_count_slider_value_changed(value):
+	drops_count = value
+	
+	asteroids_label.text = "Asteroides .: " + str(value) + " :."

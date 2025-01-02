@@ -79,6 +79,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.91618)
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="FPSLabel" type="Label" parent="UI"]
+visible = false
 offset_left = 3.0
 offset_right = 35.0
 offset_bottom = 14.0
@@ -122,13 +123,47 @@ horizontal_alignment = 1
 [node name="ShowFPS" type="CheckButton" parent="UI/Menu/MenuMargin/MenuVBox"]
 layout_mode = 2
 focus_mode = 0
-text = "Show FPS"
+text = "Exibir FPS"
 
 [node name="HSeparator" type="HSeparator" parent="UI/Menu/MenuMargin/MenuVBox"]
 layout_mode = 2
 
 [node name="OptionsVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox"]
 layout_mode = 2
+
+[node name="AsteroidsPanel" type="PanelContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox"]
+layout_mode = 2
+
+[node name="AsteroidsMargin" type="MarginContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel"]
+layout_mode = 2
+
+[node name="AsteroidsVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin"]
+layout_mode = 2
+
+[node name="AsteroidsLabel" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox"]
+layout_mode = 2
+text = "Asteroides .: 4000 :."
+horizontal_alignment = 1
+
+[node name="AsteroidsHBox" type="HBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AsteroidsMinVBox" type="VBoxContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox/AsteroidsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox/AsteroidsHBox/AsteroidsMinVBox"]
+layout_mode = 2
+text = "Quantidade"
+horizontal_alignment = 1
+
+[node name="AsteroidsCountHSlider" type="HSlider" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox/AsteroidsHBox/AsteroidsMinVBox"]
+layout_mode = 2
+min_value = 100.0
+max_value = 50000.0
+value = 4000.0
 
 [node name="SpeedPanel" type="PanelContainer" parent="UI/Menu/MenuMargin/MenuVBox/OptionsVBox"]
 layout_mode = 2
@@ -283,6 +318,7 @@ step = 0.01
 value = 0.75
 
 [connection signal="toggled" from="UI/Menu/MenuMargin/MenuVBox/ShowFPS" to="." method="_on_show_fps_button_toggled"]
+[connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/AsteroidsPanel/AsteroidsMargin/AsteroidsVBox/AsteroidsHBox/AsteroidsMinVBox/AsteroidsCountHSlider" to="." method="_on_asteroids_count_slider_value_changed"]
 [connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMinVBox/SpeedMinHSlider" to="." method="_on_min_speed_slider_value_changed"]
 [connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/SpeedPanel/SpeedMargin/SpeedVBox/SpeedHBox/SpeedMaxVBox/SpeedMaxHSlider" to="." method="_on_max_speed_slider_value_changed"]
 [connection signal="value_changed" from="UI/Menu/MenuMargin/MenuVBox/OptionsVBox/ScalePanel/ScaleMargin/ScaleVBox/ScaleHBox/ScaleMinVBox/ScaleMinHSlider" to="." method="_on_min_scale_slider_value_changed"]
